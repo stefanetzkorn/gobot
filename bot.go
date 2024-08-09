@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 )
 
@@ -9,16 +8,18 @@ const SERVER = "tngnet.nl.quakenet.org:6667"
 const PORT = 6667
 
 func main() {
-	c := connection{server: SERVER, port: PORT}
-	c.connect()
+	conn := connection{server: SERVER, port: PORT}
+	controller := Controller{&conn}
+	conn.connect()
 
-	msg, err := c.read()
-
-	if err != nil {
-		log.Fatal(err)
+	for {
+		msg, err := conn.read()
+		if err != nil {
+			log.Fatal(err)
+			break
+		}
+		controller.parse(msg)
 	}
 
-	fmt.Println(msg)
-
-	c.disconnect()
+	conn.disconnect()
 }
