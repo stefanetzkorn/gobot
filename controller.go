@@ -14,10 +14,11 @@ func (c *Controller) parse(msg string) {
 	case strings.HasPrefix(msg, "PING"):
 		c.pingpong(msg)
 	}
-	fmt.Println(msg)
 }
 
 func (c *Controller) pingpong(ping string) {
 	split := strings.Split(ping, ":")
-	c.connection.write(fmt.Sprintf("PONG :%s", split[1]))
+	msg := fmt.Sprintf("PONG :%s\r\n", split[1])
+	fmt.Println(msg)
+	c.connection.write(msg)
 }
